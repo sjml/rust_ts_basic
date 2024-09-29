@@ -11,5 +11,4 @@ cd ..
 wasm2wat mod_shared_mem_rs.wasm > mod_shared_mem_rs.wat
 
 echo "======="
-echo "Should show a Uint8Array of **non-zero** values:"
 deno run --allow-read main.ts ./mod_shared_mem_rs.wasm
