@@ -6,18 +6,14 @@ if (Deno.args.length == 0) {
 const f = await Deno.readFile(Deno.args[0]);
 const programBuffer = f.buffer;
 
-const memory = new WebAssembly.Memory({
-    initial: 1,
-    maximum: 1,
-    shared: true
-});
+const { instance } = await WebAssembly.instantiate(programBuffer, {});
 
-const program = await WebAssembly.instantiate(programBuffer, {
-    env: {
-        memory: memory
-    }
-});
+const modify_memory = instance.exports.modify_memory as CallableFunction;
+const get_memory_ptr = instance.exports.get_memory_ptr as CallableFunction;
 
-program.instance.exports.modify_memory();
-const memoryView = new Uint8Array(memory.buffer);
-console.log(memoryView.slice(0, 8));
+modify_memory();
+
+const memory_ptr = get_memory_ptr();
+const memoryView = new Uint8Array((instance.exports.memory as WebAssembly.Memory).buffer);
+
+console.log(memoryView.subarray(Number(memory_ptr), Number(memory_ptr) + 8));
