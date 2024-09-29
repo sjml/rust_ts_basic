@@ -1,20 +1,16 @@
-use std::cell::UnsafeCell;
-
-#[no_mangle]
-static mut MEMORY: UnsafeCell<[u8; 8]> = UnsafeCell::new([0; 8]);
+#[link(wasm_import_module = "env")]
+extern "C" {
+    pub static mut memory: *mut u8;
+}
 
 #[no_mangle]
 pub extern "C" fn modify_memory() {
     unsafe {
-        let memory = MEMORY.get();
-        (*memory)[1] = 32;
-        (*memory)[3] = 64;
-        (*memory)[5] = 128;
-        (*memory)[7] = 255;
-    }
-}
+        let write_slice = std::slice::from_raw_parts_mut(memory, 8);
 
-#[no_mangle]
-pub extern "C" fn get_memory_ptr() -> *const u8 {
-    unsafe { MEMORY.get() as *const u8 }
+        write_slice[1] =  16;
+        write_slice[3] =  32;
+        write_slice[5] =  64;
+        write_slice[7] = 128;
+    }
 }

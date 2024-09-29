@@ -1,1 +1,3 @@
-Trying to get to the bottom of how WASM (from Rust) and TypeScript interact. Also trying to do everything without extra toolkits or dependencies; just the raw language functionalities. But somethign is amiss...
+A little toy setup to get Rust (via WASM) and TypeScript talking across shared memory without needing any dependencies. 
+
+(Important build magic for Rust is found in the [`config.toml`](./mod_shared_mem_rs/.cargo/config.toml) file.)
